@@ -3,25 +3,28 @@
 pragma solidity ^0.8.17;
 
 contract Lottery{
-    //manager is in charge of the contract 
+    
     address public manager;
-    //new player in the contract using array[] to unlimit number 
+    
     address[] public players;
 
     function lottery() public {
         manager = msg.sender;
     }
+
     //to call the enter function we add them to players
-    function enter() public payable{
+    function enter() public payable {
         //each player is compelled to add a certain ETH to join
         require(msg.value > .01 ether);
         players.push(msg.sender);
     }
+
     //creates a random hash that will become our winner
     function random() private view returns(uint){
         return  uint (keccak256(abi.encode(block.timestamp,  players)));
     }
-    function pickWinner() public restricted{
+
+    function pickWinner() public restricted {
         //only the manager can pickWinner
         //require(msg.sender == manager);
         //creates index that is gotten from func random % play.len
@@ -32,9 +35,8 @@ contract Lottery{
         players = new address[](0);
     }
 
-    modifier restricted(){
+    modifier restricted() {
         require(msg.sender == manager);
         _;
-
     }
 }
